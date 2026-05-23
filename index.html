@@ -1,37 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Spam SMS Detector</title>
+    <title>AI Movie Genre Classifier</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <p class="subtitle">
-    AI-powered machine learning system that intelligently detects 
-    spam SMS messages with high accuracy.
-</p>
 </head>
-
 <body>
 
     <div class="container">
 
-        <h1>AI Spam SMS Detector</h1>
+        <h1>🎬 AI Movie Genre Classifier</h1>
 
-        <p class="subtitle">
-            Detect whether a message is Spam or Not Spam using Machine Learning
-        </p>
-
-        <form action="/predict" method="POST">
+        <form method="POST">
 
             <textarea
-                name="message"
-                placeholder="Enter your SMS message here..."
-                required></textarea>
+                name="description"
+                placeholder="Enter movie description here..."
+                required
+            ></textarea>
 
             <button type="submit">
-                Detect Message
+                Predict Genre
             </button>
 
         </form>
@@ -39,15 +30,13 @@
         {% if prediction %}
 
         <div class="result">
-            {{ prediction }}
+            🎥 Predicted Genre:
+            <span>{{ prediction }}</span>
         </div>
 
         {% endif %}
 
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-
 </body>
-
 </html>

@@ -1,10 +1,8 @@
-from flask import Flask, render_template, request
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-
-app = Flask(__name__)
+from sklearn.metrics import accuracy_score
 
 # Load dataset
 data = pd.read_csv(
@@ -14,7 +12,7 @@ data = pd.read_csv(
     engine="python"
 )
 
-# Keep needed columns
+# Keep only needed columns
 data = data[["GENRE", "DESCRIPTION"]]
 
 # Remove empty values
@@ -25,7 +23,7 @@ X = data["DESCRIPTION"]
 y = data["GENRE"]
 
 # Convert text into numbers
-vectorizer = TfidfVectorizer(stop_words='english')
+vectorizer = TfidfVectorizer(max_features=5000)
 
 X_vectorized = vectorizer.fit_transform(X)
 
@@ -42,20 +40,18 @@ model = LogisticRegression(max_iter=1000)
 
 model.fit(X_train, y_train)
 
-@app.route("/", methods=["GET", "POST"])
-def home():
+# Test accuracy
+y_pred = model.predict(X_test)
 
-    prediction = ""
+accuracy = accuracy_score(y_test, y_pred)
 
-    if request.method == "POST":
+print("Model Accuracy:", accuracy)
 
-        movie_description = request.form["description"]
+# Test custom prediction
+sample = ["A group of astronauts travel through space to save humanity"]
 
-        transformed_text = vectorizer.transform([movie_description])
+sample_vector = vectorizer.transform(sample)
 
-        prediction = model.predict(transformed_text)[0]
+prediction = model.predict(sample_vector)
 
-    return render_template("index.html", prediction=prediction)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+print("Predicted Genre:", prediction[0])
